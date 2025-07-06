@@ -34,7 +34,7 @@ You can run the application either **locally** or on **Gitpod** (cloud IDE in yo
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/jignesh-khandelwal/engineeringmetrics.git
+git clone https://github.com/jignesh-khandelwal/jenkins-on-gitpod.git
 cd engineeringmetrics
 ````
 
@@ -49,7 +49,7 @@ cd engineeringmetrics
 Open the GitHub repo in Gitpod using the following URL:
 
 ```
-https://gitpod.io/#https://github.com/jignesh-khandelwal/engineeringmetrics
+https://gitpod.io/#https://github.com/jignesh-khandelwal/jenkins-on-gitpod
 ```
 
 ### Step 2: Wait for Environment to Load
@@ -89,7 +89,7 @@ Ensure you have the following installed:
 ### Step 2: Clone and Enter Directory
 
 ```bash
-git clone https://github.com/jignesh-khandelwal/engineeringmetrics.git
+git clone https://github.com/jignesh-khandelwal/jenkins-on-gitpod.git
 cd engineeringmetrics
 ```
 
