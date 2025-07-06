@@ -27,6 +27,12 @@
 		<tag />
 		<url />
 	</scm>
+	<pluginRepositories>
+  		<pluginRepository>
+    		<id>spring-releases</id>
+    		<url>https://repo.spring.io/release</url>
+  		</pluginRepository>
+	</pluginRepositories>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

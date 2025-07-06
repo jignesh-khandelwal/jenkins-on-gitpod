@@ -1,8 +1,13 @@
 package com.mttr.engineeringmetrics.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.*;
+import java.time.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Deployment {
 
@@ -16,14 +21,14 @@ public class Deployment {
 
 	private String status; // SUCCESS / FAILED
 
-	// Constructors
-	public Deployment() {
-	}
-
 	public Deployment(String serviceName, LocalDateTime deployedAt, String status) {
 		this.serviceName = serviceName;
 		this.deployedAt = deployedAt;
 		this.status = status;
+	}
+
+	public boolean isFailed() {
+		return this.status != null && this.status.equalsIgnoreCase("failed");
 	}
 
 	// Getters & Setters

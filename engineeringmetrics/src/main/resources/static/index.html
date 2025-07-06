@@ -36,7 +36,9 @@
 
   <script>
     async function loadMetrics() {
-      const response = await fetch('/api/metrics');
+      //const response = await fetch('/api/metrics');
+      const response = await fetch('/api/metrics?start=2025-01-01&end=2025-12-31');
+
       const data = await response.json();
 
       const { changeFailureRate, totalDeployments, totalIncidents, meanTimeToRecoveryMinutes } = data;
