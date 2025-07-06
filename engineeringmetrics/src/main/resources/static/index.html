@@ -1,13 +1,84 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Engineering Metrics Dashboard</title>
+  <meta charset="UTF-8">
+  <title>Engineering Metrics Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h2 {
+      color: #333;
+    }
+    .chart-container {
+      width: 45%;
+      margin: 2% auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
-
 <body>
-    <h1>Welcome to the Engineering Metrics Dashboard</h1>
-    <p>Try accessing <a href="/dashboard.html">dashboard.html</a></p>
-</body>
+  <h2>Engineering Metrics Dashboard</h2>
 
+  <div class="chart-container">
+    <canvas id="pieChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="barChart"></canvas>
+  </div>
+
+  <script>
+    async function loadMetrics() {
+      const response = await fetch('/api/metrics');
+      const data = await response.json();
+
+      const { changeFailureRate, totalDeployments, totalIncidents, meanTimeToRecoveryMinutes } = data;
+
+      // Pie Chart: Incident vs Deployment Ratio
+      new Chart(document.getElementById('pieChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Failed Deployments', 'Successful Deployments'],
+          datasets: [{
+            label: 'Change Failure Rate',
+            data: [
+              (changeFailureRate * totalDeployments).toFixed(2), // failed
+              (totalDeployments - changeFailureRate * totalDeployments).toFixed(2) // successful
+            ],
+            backgroundColor: ['#e74c3c', '#2ecc71']
+          }]
+        }
+      });
+
+      // Bar Chart: Totals & MTTR
+      new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Total Deployments', 'Total Incidents', 'MTTR (mins)'],
+          datasets: [{
+            label: 'Metrics',
+            data: [totalDeployments, totalIncidents, meanTimeToRecoveryMinutes],
+            backgroundColor: ['#3498db', '#9b59b6', '#f39c12']
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    loadMetrics();
+  </script>
+</body>
 </html>
