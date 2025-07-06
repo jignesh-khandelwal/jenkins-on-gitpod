@@ -1,8 +1,8 @@
 image:
-  file: Dockerfile
+  file: .gitpod.Dockerfile
 
 tasks:
-  - name: Start Spring Boot App
+  - init: chmod +x mvnw
     command: ./mvnw spring-boot:run
 
 ports:
