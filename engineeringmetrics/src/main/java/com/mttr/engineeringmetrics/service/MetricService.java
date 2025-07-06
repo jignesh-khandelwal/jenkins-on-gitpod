@@ -1,14 +1,12 @@
 package com.mttr.engineeringmetrics.service;
 
-import com.mttr.engineeringmetrics.model.Deployment;
-import com.mttr.engineeringmetrics.model.Incident;
-import com.mttr.engineeringmetrics.repository.DeploymentRepository;
-import com.mttr.engineeringmetrics.repository.IncidentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.mttr.engineeringmetrics.model.*;
+import com.mttr.engineeringmetrics.repository.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
-import java.time.Duration;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 
 @Service
 public class MetricService {
