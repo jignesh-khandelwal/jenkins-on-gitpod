@@ -67,4 +67,10 @@ public class MetricsController {
 	public List<Deployment> getAllDeployments() {
 		return deploymentRepo.findAll();
 	}
+
+	@GetMapping("/")
+	public String redirectToDashboard() {
+		return "redirect:/dashboard.html";
+	}
+
 }
