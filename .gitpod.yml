@@ -1,0 +1,13 @@
+image:
+  file: Dockerfile
+
+tasks:
+  - name: start-jenkins
+    command: |
+      jenkins-plugin-cli --plugins workflow-aggregator docker-plugin
+      /usr/local/bin/jenkins.sh &
+
+ports:
+  - port: 8080
+    onOpen: open-browser
+    visibility: public
