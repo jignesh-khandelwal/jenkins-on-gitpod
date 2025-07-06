@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Engineering Metrics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f0f2f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            border-radius: 6px;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        canvas {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Engineering Metrics Dashboard</h1>
+
+    <div class="form-group">
+        <label for="start">Start Date:</label>
+        <input type="date" id="start" value="2025-01-01">
+        <label for="end">End Date:</label>
+        <input type="date" id="end" value="2025-12-31">
+        <button onclick="loadMetrics()">Get Metrics</button>
+    </div>
+
+    <div>
+        <p><strong>Total Deployments:</strong> <span id="totalDeployments">...</span></p>
+        <p><strong>Total Incidents:</strong> <span id="totalIncidents">...</span></p>
+        <p><strong>Change Failure Rate:</strong> <span id="changeFailureRate">...</span></p>
+        <p><strong>Mean Time to Recovery (Minutes):</strong> <span id="mttr">...</span></p>
+    </div>
+
+    <canvas id="metricsBarChart" width="600" height="300"></canvas>
+    <canvas id="metricsPieChart" width="400" height="300"></canvas>
+
+    <script>
+        let barChart = null;
+        let pieChart = null;
+
+        function loadMetrics() {
+            const start = document.getElementById('start').value;
+            const end = document.getElementById('end').value;
+
+            fetch(`/api/metrics?start=${start}&end=${end}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('totalDeployments').innerText = data.totalDeployments;
+                    document.getElementById('totalIncidents').innerText = data.totalIncidents;
+                    document.getElementById('changeFailureRate').innerText = data.changeFailureRate;
+                    document.getElementById('mttr').innerText = data.meanTimeToRecoveryMinutes;
+
+                    updateBarChart(data);
+                    updatePieChart(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching metrics:', error);
+                    alert('Failed to fetch metrics.');
+                });
+        }
+
+        function updateBarChart(data) {
+            const labels = ['Deployments', 'Incidents', 'MTTR (min)', 'Change Failure Rate'];
+            const values = [
+                data.totalDeployments,
+                data.totalIncidents,
+                parseFloat(data.meanTimeToRecoveryMinutes),
+                parseFloat(data.changeFailureRate)
+            ];
+
+            const backgroundColors = ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'];
+
+            const config = {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Engineering Metrics',
+                        data: values,
+                        backgroundColor: backgroundColors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Value'
+                            }
+                        }
+                    }
+                }
+            };
+
+            if (barChart !== null) {
+                barChart.destroy();
+            }
+
+            const ctx = document.getElementById('metricsBarChart').getContext('2d');
+            barChart = new Chart(ctx, config);
+        }
+
+        function updatePieChart(data) {
+            const labels = ['Incidents', 'Successful Deployments'];
+            const incidents = parseInt(data.totalIncidents);
+            const deployments = parseInt(data.totalDeployments);
+            const successfulDeployments = deployments - incidents;
+
+            const config = {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: [incidents, successfulDeployments],
+                        backgroundColor: ['#FF6384', '#36A2EB']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Change Failure Ratio (Incidents vs Successful Deployments)'
+                        }
+                    }
+                }
+            };
+
+            if (pieChart !== null) {
+                pieChart.destroy();
+            }
+
+            const ctx = document.getElementById('metricsPieChart').getContext('2d');
+            pieChart = new Chart(ctx, config);
+        }
+
+        window.onload = loadMetrics;
+    </script>
+</body>
+</html>
